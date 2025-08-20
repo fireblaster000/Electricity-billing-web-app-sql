@@ -1,0 +1,238 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Adjustment</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Bill Adjustment</h2>
+        <form action="/bill-adjustments" method="post">
+            <label for="bill_id">Bill ID:</label>
+            <input type="number" id="bill_id" name="bill_id" required>
+            
+            <label for="officer_name">Officer Name:</label>
+            <input type="text" id="officer_name" name="officer_name" required>
+            
+            <label for="officer_designation">Officer Designation:</label>
+            <input type="text" id="officer_designation" name="officer_designation" required>
+            
+            <label for="original_bill_amount">Original Bill Amount:</label>
+            <input type="number" id="original_bill_amount" name="original_bill_amount" required step="0.01">
+            
+            <label for="adjustment_amount">Adjustment Amount:</label>
+            <input type="number" id="adjustment_amount" name="adjustment_amount" required step="0.01">
+            
+            <label for="adjustment_reason">Adjustment Reason:</label>
+            <textarea id="adjustment_reason" name="adjustment_reason" rows="4" required></textarea>
+            
+            <button type="submit">Submit Adjustment</button>
+        </form>
+    </div>
+</body>
+</html> --> 
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Adjustment</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script>
+        // Fetch original bill amount when a Bill ID is entered
+        async function fetchOriginalBillAmount() {
+            const billId = document.getElementById("bill_id").value;
+            const originalBillAmountInput = document.getElementById("original_bill_amount");
+            
+            // Reset the original bill amount field
+            originalBillAmountInput.value = "";
+
+            if (!billId) {
+                return; // Do nothing if Bill ID is empty
+            }
+
+            try {
+                const response = await fetch(`/get-original-bill-amount/${billId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update the original bill amount field
+                    originalBillAmountInput.value = data.original_bill_amount;
+                } else {
+                    alert(data.error || "Error fetching original bill amount");
+                }
+            } catch (error) {
+                console.error("Error fetching original bill amount:", error);
+                alert("Failed to fetch original bill amount");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Bill Adjustment</h2>
+        <form action="/bill-adjustments" method="post">
+            <label for="bill_id">Bill ID:</label>
+            <input type="number" id="bill_id" name="bill_id" required onblur="fetchOriginalBillAmount()">
+            
+            <label for="officer_name">Officer Name:</label>
+            <input type="text" id="officer_name" name="officer_name" required>
+            
+            <label for="officer_designation">Officer Designation:</label>
+            <input type="text" id="officer_designation" name="officer_designation" required>
+            
+            <label for="original_bill_amount">Original Bill Amount:</label>
+            <input type="text" id="original_bill_amount" name="original_bill_amount" readonly required>
+            
+            <label for="adjustment_amount">Adjustment Amount:</label>
+            <input type="number" id="adjustment_amount" name="adjustment_amount" required>
+            
+            <label for="adjustment_reason">Adjustment Reason:</label>
+            <textarea id="adjustment_reason" name="adjustment_reason" required></textarea>
+            
+            <button type="submit">Submit Adjustment</button>
+        </form>
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Adjustment</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script>
+        // Fetch original bill amount when a Bill ID is entered
+        async function fetchOriginalBillAmount() {
+            const billId = document.getElementById("bill_id").value;
+            const originalBillAmountInput = document.getElementById("original_bill_amount");
+    
+            // Reset the original bill amount field
+            originalBillAmountInput.value = "";
+    
+            if (!billId) {
+                return; // Do nothing if Bill ID is empty
+            }
+    
+            try {
+                console.log("Fetching original bill amount for Bill ID:", billId); // Debug
+                const response = await fetch(`/get-original-bill-amount/${billId}`);
+                const data = await response.json();
+    
+                console.log("Response from /get-original-bill-amount:", data); // Debug
+                if (response.ok) {
+                    // Update the original bill amount field
+                    originalBillAmountInput.value = data.original_bill_amount;
+                } else {
+                    // Display error in an alert
+                    alert(data.error || "Error fetching original bill amount");
+                }
+            } catch (error) {
+                console.error("Error fetching original bill amount:", error); // Debug
+                alert("Failed to fetch original bill amount");
+            }
+        }
+    
+        // Submit bill adjustment
+        // async function submitBillAdjustment(event) {
+        //     event.preventDefault(); // Prevent form submission
+    
+        //     const formData = new FormData(event.target);
+    
+        //     console.log("Submitting bill adjustment with data:", Object.fromEntries(formData.entries())); // Debug
+        //     try {
+        //         const response = await fetch('/bill-adjustments', {
+        //             method: 'POST',
+        //             body: formData
+        //         });
+    
+        //         console.log("Response from /bill-adjustments:", response); // Debug
+        //         if (response.ok) {
+        //             console.log("Redirection to:", response.url); // Debug
+        //             window.location.href = response.url;
+        //         } else {
+        //             // Parse the JSON response for error handling
+        //             const data = await response.json();
+        //             console.log("Data from /bill-adjustments response:", data); // Debug
+        //             if (!response.ok) {
+        //                 alert(data.error || "Error processing bill adjustment");
+        //             }
+        //         }
+        //     } catch (error) {
+        //         console.error("Error submitting bill adjustment:", error); // Debug
+        //         alert("Failed to submit bill adjustment");
+        //     }
+        // }
+        async function submitBillAdjustment(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(event.target);
+
+            console.log("Submitting bill adjustment with data:", Object.fromEntries(formData.entries())); // Debug
+
+            try {
+                const response = await fetch('/bill-adjustments', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log("Response from /bill-adjustments:", response); // Debug
+
+                if (response.ok) {
+                    // If the server returns HTML directly, parse it as text
+                    const html = await response.text();
+
+                    console.log("HTML content received:", html); // Debug
+
+                    // Replace the current document's content with the received HTML
+                    document.open();
+                    document.write(html);
+                    document.close();
+                } else {
+                    // Handle errors if the response is not OK
+                    const data = await response.json();
+                    console.log("Error response data:", data); // Debug
+                    alert(data.error || "Error processing bill adjustment");
+                }
+            } catch (error) {
+                console.error("Error submitting bill adjustment:", error); // Debug
+                alert("Failed to submit bill adjustment");
+            }
+        }
+
+
+    </script>
+    
+</head>
+<body>
+    <div class="container">
+        <h2>Bill Adjustment</h2>
+        <form action="/bill-adjustments" method="post" onsubmit="submitBillAdjustment(event)">
+            <label for="bill_id">Bill ID:</label>
+            <input type="number" id="bill_id" name="bill_id" required onblur="fetchOriginalBillAmount()">
+            
+            <label for="officer_name">Officer Name:</label>
+            <input type="text" id="officer_name" name="officer_name" required>
+            
+            <label for="officer_designation">Officer Designation:</label>
+            <input type="text" id="officer_designation" name="officer_designation" required>
+            
+            <label for="original_bill_amount">Original Bill Amount:</label>
+            <input type="text" id="original_bill_amount" name="original_bill_amount" readonly required>
+            
+            <label for="adjustment_amount">Adjustment Amount:</label>
+            <input type="number" id="adjustment_amount" name="adjustment_amount" required>
+            
+            <label for="adjustment_reason">Adjustment Reason:</label>
+            <textarea id="adjustment_reason" name="adjustment_reason" required></textarea>
+            
+            <button type="submit">Submit Adjustment</button>
+        </form>
+    </div>
+</body>
+</html>
+
+

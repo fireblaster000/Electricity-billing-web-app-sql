@@ -1,0 +1,87 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Payment</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+    <h2>Bill Payment</h2>
+    <form action="/bill-payment" method="post">
+        <label for="bill_id">Bill ID:</label>
+        <input type="number" id="bill_id" name="bill_id" required>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <label for="payment_method_id">Payment Method ID:</label>
+        <input type="number" id="payment_method_id" name="payment_method_id" required>
+        <button type="submit">Submit Payment</button>
+    </form>
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Payment</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script>
+        async function submitBillPayment(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(event.target);
+
+            console.log("Submitting bill payment with data:", Object.fromEntries(formData.entries())); // Debug
+
+            try {
+                const response = await fetch('/bill-payment', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log("Response from /bill-payment:", response); // Debug
+
+                if (response.ok) {
+                    // Parse the response as HTML
+                    const html = await response.text();
+
+                    console.log("HTML content received:", html); // Debug
+
+                    // Replace the current document's content with the received HTML
+                    document.open();
+                    document.write(html);
+                    document.close();
+                } else {
+                    // Handle errors if the response is not OK
+                    const data = await response.json();
+                    console.log("Error response data:", data); // Debug
+                    alert(data.error || "Error processing bill payment");
+                }
+            } catch (error) {
+                console.error("Error processing bill payment:", error); // Debug
+                alert("Failed to process bill payment");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Bill Payment</h2>
+        <form action="/bill-payment" method="post" onsubmit="submitBillPayment(event)">
+            <label for="bill_id">Bill ID:</label>
+            <input type="number" id="bill_id" name="bill_id" required>
+            
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+            
+            <label for="payment_method_id">Payment Method ID:</label>
+            <input type="number" id="payment_method_id" name="payment_method_id" required>
+            
+            <button type="submit">Submit Payment</button>
+        </form>
+    </div>
+</body>
+</html>

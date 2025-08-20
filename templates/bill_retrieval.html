@@ -1,0 +1,92 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Retrieval</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+    <h2>Billing Information Retrieval</h2>
+    <form action="/bill-retrieval" method="post">
+        <label for="customer_id">Customer ID:</label>
+        <input type="text" id="customer_id" name="customer_id" required>
+        <label for="connection_id">Connection ID:</label>
+        <input type="text" id="connection_id" name="connection_id" required>
+        <label for="month">Month:</label>
+        <input type="text" id="month" name="month" required>
+        <label for="year">Year:</label>
+        <input type="text" id="year" name="year" required>
+        <button type="submit">Retrieve Bill</button>
+    </form>
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Retrieval</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script>
+        async function submitBillRetrieval(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(event.target);
+
+            console.log("Submitting bill retrieval with data:", Object.fromEntries(formData.entries())); // Debug
+
+            try {
+                const response = await fetch('/bill-retrieval', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log("Response from /bill-retrieval:", response); // Debug
+
+                if (response.ok) {
+                    // Parse the response as HTML
+                    const html = await response.text();
+
+                    console.log("HTML content received:", html); // Debug
+
+                    // Replace the current document's content with the received HTML
+                    document.open();
+                    document.write(html);
+                    document.close();
+                } else {
+                    // Handle errors if the response is not OK
+                    const data = await response.json();
+                    console.log("Error response data:", data); // Debug
+                    alert(data.error || "Error retrieving bill information");
+                }
+            } catch (error) {
+                console.error("Error retrieving bill information:", error); // Debug
+                alert("Failed to retrieve bill information");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Billing Information Retrieval</h2>
+        <form action="/bill-retrieval" method="post" onsubmit="submitBillRetrieval(event)">
+            <label for="customer_id">Customer ID:</label>
+            <input type="text" id="customer_id" name="customer_id" required>
+            
+            <label for="connection_id">Connection ID:</label>
+            <input type="text" id="connection_id" name="connection_id" required>
+            
+            <label for="month">Month:</label>
+            <input type="text" id="month" name="month" required>
+            
+            <label for="year">Year:</label>
+            <input type="text" id="year" name="year" required>
+            
+            <button type="submit">Retrieve Bill</button>
+        </form>
+    </div>
+</body>
+</html>
